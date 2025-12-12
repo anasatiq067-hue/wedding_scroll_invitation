@@ -22,18 +22,15 @@
         }
         .cursive { font-family: 'Great Vibes', cursive; }
 
-        /* The main scroll container that enables scroll-snapping */
+        /* The main scroll container now has native scrolling disabled */
         .scroll-container {
             height: 100vh;
-            overflow-y: scroll;
-            scroll-snap-type: y mandatory;
-            scroll-behavior: smooth;
+            overflow-y: hidden; /* Controls scrolling via JS now */
         }
 
-        /* Each scene snaps to the top of the viewport */
+        /* Each scene is still full height */
         section {
             height: 100vh;
-            scroll-snap-align: start;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -86,7 +83,7 @@
             animation: scroll-prompt 2s infinite ease-in-out;
         }
         
-        /* --- VIEW LOCATION JIGGLE ANIMATION (NEW) --- */
+        /* --- VIEW LOCATION JIGGLE ANIMATION --- */
         @keyframes button-jiggle {
             0%, 100% { transform: scale(1); }
             10% { transform: scale(0.98) rotate(-1deg); }
@@ -214,77 +211,155 @@
     </div>
 
     <script>
-        /**
-         * The scroll snappping works automatically due to CSS.
-         * This script handles three things:
-         * 1. Adding a 'visible' class to the current scene for animation effect.
-         * 2. Automatically looping back to the top when the user scrolls past the last content scene (scene-4).
-         * 3. Handling button clicks (RSVP and View Location).
-         */
-
         const container = document.getElementById('main-scroll');
         const sections = Array.from(document.querySelectorAll('section'));
-        const SCENE_COUNT = 5; // Total scenes including the invisible loop trigger
+        const SCENE_COUNT = sections.length;
+        let currentSceneIndex = 0;
+        let isScrolling = false; // Flag to prevent rapid movements
 
         // --- Utility Functions ---
 
         /**
-         * Manually scrolls back to the first scene (Blessings).
+         * Throttling function to limit how often an event handler can run.
          */
-        function resetScroll() {
-            container.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-            // Immediately set the first section to visible for a clean loop
-            sections.forEach((section, index) => {
-                section.classList.remove('visible');
-                if (index === 0) {
-                    section.classList.add('visible');
+        const throttle = (func, limit) => {
+            let lastFunc;
+            let lastRan;
+            return function() {
+                const context = this;
+                const args = arguments;
+                if (!lastRan) {
+                    func.apply(context, args);
+                    lastRan = Date.now();
+                } else {
+                    clearTimeout(lastFunc);
+                    lastFunc = setTimeout(function() {
+                        if ((Date.now() - lastRan) >= limit) {
+                            func.apply(context, args);
+                            lastRan = Date.now();
+                        }
+                    }, limit - (Date.now() - lastRan));
                 }
-            });
-        }
-        
+            };
+        };
+
         /**
-         * Determines which scene is currently in the viewport and toggles the 'visible' class for animations.
+         * Helper to update the visible class based on the current index
          */
-        function updateSceneVisibility() {
-            // Calculate the height of one viewport
-            const viewportHeight = container.clientHeight;
-            // Get the current scroll position
-            const scrollPos = container.scrollTop;
-
-            // Determine which section is currently at the top of the viewport
-            let currentSceneIndex = Math.round(scrollPos / viewportHeight);
-            
-            // Boundary check
-            if (currentSceneIndex >= SCENE_COUNT - 1) {
-                // If past the last content scene (scene-4), auto-loop to the top
-                setTimeout(resetScroll, 500); // 500ms delay for visual effect
-                return; 
-            }
-
-            sections.forEach((section, index) => {
-                // Apply 'visible' class only to the current scene
-                if (index === currentSceneIndex) {
+        function updateVisibilityClasses(index) {
+            sections.forEach((section, i) => {
+                if (i === index) {
                     section.classList.add('visible');
                 } else {
                     section.classList.remove('visible');
                 }
             });
         }
+        
+        /**
+         * Manually scrolls back to the first scene (Blessings).
+         */
+        function resetScroll() {
+            // Reset index to 0
+            currentSceneIndex = 0;
+            
+            container.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            
+            updateVisibilityClasses(0);
+            
+            // Allow scrolling again after reset transition
+            setTimeout(() => {
+                isScrolling = false;
+            }, 800); 
+        }
+
+        /**
+         * Controlled function to move to a new scene index.
+         * Ensures movement is restricted to one scene at a time.
+         */
+        function navigateToScene(newIndex) {
+            if (isScrolling) return;
+
+            // Ensure index is within bounds (excluding the hidden scene-5)
+            if (newIndex < 0) {
+                newIndex = 0;
+            } else if (newIndex >= SCENE_COUNT - 1) {
+                // If past the last content scene (scene-4), loop back to the top
+                setTimeout(resetScroll, 500); 
+                return;
+            }
+            
+            isScrolling = true;
+            currentSceneIndex = newIndex;
+            
+            const targetScrollTop = currentSceneIndex * container.clientHeight;
+
+            container.scrollTo({
+                top: targetScrollTop,
+                behavior: 'smooth'
+            });
+            
+            // Update visibility class immediately for the target scene
+            updateVisibilityClasses(currentSceneIndex);
+
+            // Re-enable scrolling after the transition is visually complete (must match smooth transition time)
+            setTimeout(() => {
+                isScrolling = false;
+            }, 800); 
+        }
+
+        // --- Event Handlers ---
+
+        /**
+         * Handles mouse wheel scrolling (desktop).
+         */
+        const handleWheel = throttle((event) => {
+            event.preventDefault(); // Stop default browser scrolling
+            // Determine scroll direction (deltaY > 0 is down, < 0 is up)
+            const direction = event.deltaY > 0 ? 1 : -1;
+            navigateToScene(currentSceneIndex + direction);
+        }, 1000); // 1000ms delay between controlled scrolls
+
+        // --- Touch Handlers for Mobile Swipe Control ---
+        let touchStartY = 0;
+        let touchEndY = 0;
+
+        container.addEventListener('touchstart', (e) => {
+            touchStartY = e.changedTouches[0].screenY;
+            touchEndY = touchStartY; 
+        }, { passive: false }); // Use { passive: false } to enable e.preventDefault() in touchmove
+
+        container.addEventListener('touchmove', (e) => {
+            // Prevent default scrolling behavior
+            e.preventDefault(); 
+            touchEndY = e.changedTouches[0].screenY;
+        }, { passive: false });
+
+        container.addEventListener('touchend', () => {
+            const swipeDistance = touchStartY - touchEndY;
+            const swipeThreshold = 50; // Minimum vertical swipe distance to register
+
+            if (Math.abs(swipeDistance) > swipeThreshold) {
+                const direction = swipeDistance > 0 ? 1 : -1; // 1 for down, -1 for up
+                navigateToScene(currentSceneIndex + direction);
+            }
+        });
+
 
         // --- Initialization ---
 
-        // 1. Event listener for scroll updates
-        container.addEventListener('scroll', updateSceneVisibility);
-        
-        // 2. Initial setup: Check which scene is visible on load and mark it
+        // 1. Initial setup: Check which scene is visible on load and mark it
         window.onload = () => {
              // Ensure the initial state is correct (Scene 0 visible)
-            sections[0].classList.add('visible');
-            updateSceneVisibility();
+            updateVisibilityClasses(currentSceneIndex);
         };
+
+        // 2. Add wheel listener for desktop scrolling (controlled navigation)
+        // Note: Using { passive: false } to allow preventDefault()
+        container.addEventListener('wheel', handleWheel, { passive: false });
 
         // 3. Add simple click handler for the RSVP button (placeholder)
         document.getElementById('rsvp-button').addEventListener('click', () => {
@@ -298,7 +373,7 @@
             }, 1500);
         });
         
-        // 4. Add simple click handler for the View Location button (NEW)
+        // 4. Add simple click handler for the View Location button
         document.getElementById('view-location-button').addEventListener('click', () => {
             const mapUrl = "https://maps.app.goo.gl/1bNyPBiMZW7SSm377";
             window.open(mapUrl, '_blank');
