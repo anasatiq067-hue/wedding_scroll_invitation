@@ -46,9 +46,8 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            /* Adjusted padding to rely more on the inner content wrapper for horizontal inset */
-            padding-top: 20px;
-            padding-bottom: 20px;
+            /* Restoring general padding for a safe buffer on all sides */
+            padding: 20px; 
             box-sizing: border-box;
             background-color: var(--color-cream);
             position: relative;
@@ -94,17 +93,14 @@
             
             <!-- Scene 0: Blessings (Initial View) -->
             <section id="scene-0">
-                <!-- NEW: Content wrapper added with max-w-2xl and internal padding px-6 -->
-                <div class="max-w-2xl w-full mx-auto px-6">
-                    <p class="text-xl italic mb-4">Seeking Blessings from Allah, the Most High,</p>
-                    <h1 class="text-2xl sm:text-5xl md:text-7xl font-bold text-center" style="color: var(--color-gold);">
-                        بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ
-                    </h1>
-                    <p class="text-base sm:text-lg md:text-xl mt-6 text-center">
-                        The Family members of M. Atiq (late) and Khushnudi Begum (Late) inviting you to the
-                    </p>
-                </div>
-                <!-- END NEW: Content wrapper -->
+                <!-- Removed the generic wrapper. Added max-w-xl and mx-auto to constrain specific content. -->
+                <p class="text-xl italic mb-4 max-w-xl mx-auto">Seeking Blessings from Allah, the Most High,</p>
+                <h1 class="text-2xl sm:text-5xl md:text-7xl font-bold text-center max-w-xl mx-auto" style="color: var(--color-gold);">
+                    بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ
+                </h1>
+                <p class="text-base sm:text-lg md:text-xl mt-6 text-center max-w-xl mx-auto">
+                    The Family members of M. Atiq (late) and Khushnudi Begum (Late) inviting you to the
+                </p>
                 
                 <div class="mt-20 flex flex-col items-center">
                     <span class="text-3xl" style="color: var(--color-gold);">↓</span>
@@ -114,86 +110,77 @@
 
             <!-- Scene 1: The Couple (Bride and Groom Names) -->
             <section id="scene-1">
-                <!-- NEW: Content wrapper added -->
-                <div class="max-w-2xl w-full mx-auto px-6">
-                    <h2 class="text-4xl sm:text-5xl md:text-6xl uppercase tracking-widest mb-10">
-                        Wedding Ceremony of
-                    </h2>
-                    <p class="cursive text-4xl sm:text-5xl md:text-8xl" style="color: var(--color-gold);">
-                        Daughter Of athar atiq
-                    </p>
-                    <p class="text-2xl mt-4 mb-4 text-gray-500">&</p>
-                    <p class="cursive text-4xl sm:text-5xl md:text-8xl" style="color: var(--color-gold);">
-                        Shahab Ullah Kirmani
-                    </p>
-                    <p class="text-lg mt-10">Daughter of Athar Atiq & Son of Haseeb Ullah Kirmani</p>
-                </div>
-                <!-- END NEW: Content wrapper -->
+                <!-- Wrapper removed -->
+                <h2 class="text-4xl sm:text-5xl md:text-6xl uppercase tracking-widest mb-10">
+                    Wedding Ceremony of
+                </h2>
+                <p class="cursive text-4xl sm:text-5xl md:text-8xl" style="color: var(--color-gold);">
+                    Daughter Of athar atiq
+                </p>
+                <p class="text-2xl mt-4 mb-4 text-gray-500">&</p>
+                <p class="cursive text-4xl sm:text-5xl md:text-8xl" style="color: var(--color-gold);">
+                    Shahab Ullah Kirmani
+                </p>
+                <p class="text-lg mt-10">Daughter of Athar Atiq & Son of Haseeb Ullah Kirmani</p>
             </section>
 
             <!-- Scene 2: Date and Time -->
             <section id="scene-2">
-                <!-- NEW: Content wrapper added -->
-                <div class="max-w-2xl w-full mx-auto px-6">
-                    <h2 class="text-4xl md:text-6xl mb-8 uppercase tracking-widest" style="color: var(--color-gold);">
-                        INSHALLAH on
-                    </h2>
-                    <div class="text-center">
-                        <p class="text-5xl md:text-7xl font-bold">JANUARY 09</p>
-                        <p class="text-2xl md:text-3xl mt-4">2026</p>
-                        <div class="h-px w-20 mx-auto bg-gray-400 my-6"></div>
-                        <p class="text-xl md:text-3xl">Starting: 9:00 PM</p>
-                        <p class="text-lg text-gray-500 mt-2"></p>
-                        
-                        <button onclick="createCalendarLink()" 
-                            class="mt-8 px-6 py-3 text-lg font-bold uppercase tracking-wider text-white rounded transition duration-300 transform hover:scale-105 active:scale-95 shadow-xl"
-                            style="background-color: var(--color-gold);">
-                            Add to Calendar
-                        </button>
-                    </div>
+                <!-- Wrapper removed -->
+                <h2 class="text-4xl md:text-6xl mb-8 uppercase tracking-widest" style="color: var(--color-gold);">
+                    INSHALLAH on
+                </h2>
+                <div class="text-center">
+                    <p class="text-5xl md:text-7xl font-bold">JANUARY 09</p>
+                    <p class="text-2xl md:text-3xl mt-4">2026</p>
+                    <div class="h-px w-20 mx-auto bg-gray-400 my-6"></div>
+                    <p class="text-xl md:text-3xl">Starting: 9:00 PM</p>
+                    <p class="text-lg text-gray-500 mt-2"></p>
+                    
+                    <button onclick="createCalendarLink()" 
+                        class="mt-8 px-6 py-3 text-lg font-bold uppercase tracking-wider text-white rounded transition duration-300 transform hover:scale-105 active:scale-95 shadow-xl"
+                        style="background-color: var(--color-gold);">
+                        Add to Calendar
+                    </button>
                 </div>
-                <!-- END NEW: Content wrapper -->
             </section>
 
             <!-- Scene 3: Venue and Location (Final Page) -->
             <section id="scene-3">
-                <!-- NEW: Content wrapper added -->
-                <div class="max-w-2xl w-full mx-auto px-6">
-                    <h2 class="text-4xl md:text-5xl mb-8 uppercase tracking-widest" style="color: var(--color-gold);">
-                        The Venue
-                    </h2>
-                    <div class="text-center">
-                        <!-- Venue Name: Explicitly set responsive sizes -->
-                        <p class="text-4xl sm:text-5xl md:text-7xl font-semibold">Crown Banquet</p>
-                        <!-- Address: Kept large for emphasis - max-w-xl kept for good wrapping on this long line -->
-                        <p class="text-xl md:text-3xl mt-4 max-w-xl font-medium mx-auto">
-                            Block 'N' North Nazimabad, Karachi
-                        </p>
-                        
-                        <!-- EXISTING STRUCTURE: Button | QR (Inline) -->
-                        <div class="mt-8 flex items-center justify-center space-x-4">
-                            <!-- 1. View Location Button (Directly opens map) -->
-                            <button id="view-location-button" 
-                                class="px-6 py-3 text-lg font-bold uppercase tracking-wider text-white rounded transition duration-300 transform hover:scale-105 active:scale-95 shadow-xl view-location-jiggle"
-                                style="background-color: var(--color-gold);">
-                                View Location
-                            </button>
+                <!-- Wrapper removed -->
+                <h2 class="text-4xl md:text-5xl mb-8 uppercase tracking-widest" style="color: var(--color-gold);">
+                    The Venue
+                </h2>
+                <div class="text-center">
+                    <!-- Venue Name: Explicitly set responsive sizes -->
+                    <p class="text-4xl sm:text-5xl md:text-7xl font-semibold">Crown Banquet</p>
+                    <!-- Address: Kept max-w-xl for good wrapping on this long line -->
+                    <p class="text-xl md:text-3xl mt-4 max-w-xl font-medium mx-auto">
+                        Block 'N' North Nazimabad, Karachi
+                    </p>
+                    
+                    <!-- EXISTING STRUCTURE: Button | QR (Inline) -->
+                    <div class="mt-8 flex items-center justify-center space-x-4">
+                        <!-- 1. View Location Button (Directly opens map) -->
+                        <button id="view-location-button" 
+                            class="px-6 py-3 text-lg font-bold uppercase tracking-wider text-white rounded transition duration-300 transform hover:scale-105 active:scale-95 shadow-xl view-location-jiggle"
+                            style="background-color: var(--color-gold);">
+                            View Location
+                        </button>
 
-                            <!-- Separator -->
-                            <div class="text-2xl font-light text-gray-500 hidden sm:block">|</div>
+                        <!-- Separator -->
+                        <div class="text-2xl font-light text-gray-500 hidden sm:block">|</div>
 
-                            <!-- 2. Clickable QR Code Image -->
-                            <a href="https://maps.app.goo.gl/1bNyPBiMZW7SSm377" target="_blank" title="Scan or Click for Map" class="hidden sm:block">
-                                <!-- Increased size to w-24 h-24 (96px) for easier scanning -->
-                                <div class="w-24 h-24 bg-white border-2 p-1 shadow-md transition duration-300 hover:scale-105" style="border-color: var(--color-gold);">
-                                    <!-- Updated image source size for quality -->
-                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://maps.app.goo.gl/1bNyPBiMZW7SSm377" alt="Location QR Code" class="w-full h-full object-cover">
-                                </div>
-                            </a>
-                        </div>
+                        <!-- 2. Clickable QR Code Image -->
+                        <a href="https://maps.app.goo.gl/1bNyPBiMZW7SSm377" target="_blank" title="Scan or Click for Map" class="hidden sm:block">
+                            <!-- Increased size to w-24 h-24 (96px) for easier scanning -->
+                            <div class="w-24 h-24 bg-white border-2 p-1 shadow-md transition duration-300 hover:scale-105" style="border-color: var(--color-gold);">
+                                <!-- Updated image source size for quality -->
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://maps.app.goo.gl/1bNyPBiMZW7SSm377" alt="Location QR Code" class="w-full h-full object-cover">
+                            </div>
+                        </a>
                     </div>
                 </div>
-                <!-- END NEW: Content wrapper -->
                 
                 <!-- Button to initiate the loop back -->
                 <button onclick="resetScroll()" class="mt-16 text-lg underline hover:opacity-80 transition" style="color: var(--color-gold);">
