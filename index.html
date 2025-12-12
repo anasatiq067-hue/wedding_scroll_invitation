@@ -141,6 +141,14 @@
                 <div class="h-px w-20 mx-auto bg-gray-400 my-6"></div>
                 <p class="text-xl md:text-3xl">Starting: 9:00 PM</p>
                 <p class="text-lg text-gray-500 mt-2"></p>
+                
+                <!-- UPDATED: Add to Calendar Button - Now matches the gold color, text size, and shadow of the View Location button -->
+                <button onclick="createCalendarLink()" 
+                    class="mt-8 px-6 py-3 text-lg font-bold uppercase tracking-wider text-white rounded transition duration-300 transform hover:scale-105 active:scale-95 shadow-xl"
+                    style="background-color: var(--color-gold);">
+                    Add to Calendar
+                </button>
+                <!-- END UPDATED -->
             </div>
         </section>
 
@@ -158,7 +166,7 @@
                     Block 'N' North Nazimabad, Karachi
                 </p>
                 
-                <!-- NEW STRUCTURE: Button | QR (Inline) -->
+                <!-- EXISTING STRUCTURE: Button | QR (Inline) -->
                 <div class="mt-8 flex items-center justify-center space-x-4">
                     <!-- 1. View Location Button (Directly opens map) -->
                     <button id="view-location-button" 
@@ -179,7 +187,7 @@
                         </div>
                     </a>
                 </div>
-                <!-- END NEW STRUCTURE -->
+                <!-- END EXISTING STRUCTURE -->
 
                 <!-- Button to initiate the loop back -->
                 <button onclick="resetScroll()" class="mt-16 text-lg underline hover:opacity-80 transition" style="color: var(--color-gold);">
@@ -289,6 +297,24 @@
             setTimeout(() => {
                 isScrolling = false;
             }, 800); 
+        }
+
+        /**
+         * Generates and opens a Google Calendar link based on event details.
+         * Note: Setting the reminder time and specific color is often ignored 
+         * by the basic template link but the core event data is saved.
+         */
+        function createCalendarLink() {
+            const title = encodeURIComponent("Wedding Ceremony");
+            // Event is 9:00 PM (2100) on Jan 9, 2026 to 12:00 AM (0000) on Jan 10, 2026 (Local time, 3 hours long).
+            const dates = "20260109T210000/20260110T000000";
+            
+            const location = encodeURIComponent("Crown Banquet, Block 'N' North Nazimabad, Karachi");
+            const details = encodeURIComponent("Join us for the wedding ceremony. Reminder is requested for 1 day before.");
+
+            const calendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${details}&location=${location}&sf=true&output=xml`;
+
+            window.open(calendarUrl, '_blank');
         }
 
         // --- Event Handlers ---
