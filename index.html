@@ -52,14 +52,6 @@
             transform: translateY(0);
         }
 
-        /* Responsive Title Sizing (Crucial for mobile) */
-        .title { font-size: 3rem; }
-        .subtitle { font-size: 1.5rem; }
-        @media (min-width: 768px) {
-            .title { font-size: 5rem; }
-            .subtitle { font-size: 2.5rem; }
-        }
-        
         /* Subtle background flourish */
         .flourish {
             position: absolute;
@@ -103,12 +95,13 @@
         <!-- Scene 0: Blessings (Initial View) -->
         <section id="scene-0">
             <div class="flourish"></div>
-            <!-- Ensures text sizes scale correctly on mobile -->
+            <!-- Arabic text: Decreased base size to 3xl, ensuring it fits on smallest mobile screens -->
             <p class="text-xl italic mb-4">Seeking Blessings from Allah, the Most High,</p>
-            <h1 class="title font-bold text-center" style="color: var(--color-gold);">
+            <h1 class="text-3xl sm:text-5xl md:text-7xl font-bold text-center" style="color: var(--color-gold);">
                 بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ
             </h1>
-            <p class="subtitle mt-6 max-w-lg text-center">
+            <!-- Subtitle text: Explicitly set responsive sizes -->
+            <p class="text-base sm:text-lg md:text-xl mt-6 max-w-lg text-center">
                 The Family members of M. Atiq (late) and Khushnudi Begum (Late) inviting you to the
             </p>
             <div class="mt-20 flex flex-col items-center scroll-indicator">
@@ -120,14 +113,16 @@
         <!-- Scene 1: The Couple (Bride and Groom Names) -->
         <section id="scene-1">
             <div class="flourish"></div>
-            <h2 class="text-5xl md:text-6xl uppercase tracking-widest mb-10">
+            <h2 class="text-4xl sm:text-5xl md:text-6xl uppercase tracking-widest mb-10">
                 Wedding Ceremony of
             </h2>
-            <p class="cursive title text-6xl md:text-8xl" style="color: var(--color-gold);">
+            <!-- Name 1: Decreased base size to 4xl for mobile -->
+            <p class="cursive text-4xl sm:text-5xl md:text-8xl" style="color: var(--color-gold);">
                 Daughter Of athar atiq
             </p>
             <p class="text-2xl mt-4 mb-4 text-gray-500">&</p>
-            <p class="cursive title text-6xl md:text-8xl" style="color: var(--color-gold);">
+            <!-- Name 2: Decreased base size to 4xl for mobile -->
+            <p class="cursive text-4xl sm:text-5xl md:text-8xl" style="color: var(--color-gold);">
                 Shahab Ullah Kirmani
             </p>
             <p class="text-lg mt-10">Daughter of Athar Atiq & Son of Haseeb Ullah Kirmani</p>
@@ -136,7 +131,8 @@
         <!-- Scene 2: Date and Time -->
         <section id="scene-2">
             <div class="flourish"></div>
-            <h2 class="title mb-8 uppercase tracking-widest" style="color: var(--color-gold);">
+            <!-- Heading: Explicitly set responsive sizes -->
+            <h2 class="text-4xl md:text-6xl mb-8 uppercase tracking-widest" style="color: var(--color-gold);">
                 INSHALLAH on
             </h2>
             <div class="text-center">
@@ -148,72 +144,56 @@
             </div>
         </section>
 
-        <!-- Scene 3: Venue (Updated) -->
+        <!-- Scene 3: Venue and Location (Final Page) -->
         <section id="scene-3">
             <div class="flourish"></div>
-            <!-- Changed The Venue heading to be smaller (4xl/5xl) -->
             <h2 class="text-4xl md:text-5xl mb-8 uppercase tracking-widest" style="color: var(--color-gold);">
                 The Venue
             </h2>
             <div class="text-center">
-                <!-- Changed Crown Banquet to use the larger 'title' class (3rem/5rem) -->
-                <p class="title font-semibold">Crown Banquet</p>
-                <!-- Removed venue-address-pulse class -->
+                <!-- Venue Name: Explicitly set responsive sizes -->
+                <p class="text-4xl sm:text-5xl md:text-7xl font-semibold">Crown Banquet</p>
+                <!-- Address: Kept large for emphasis -->
                 <p class="text-xl md:text-3xl mt-4 max-w-xl font-medium">
                     Block 'N' North Nazimabad, Karachi
                 </p>
-                <!-- Added view-location-jiggle class for animation -->
-                <button id="view-location-button" 
-                    class="mt-8 px-8 py-4 text-lg md:text-xl font-bold uppercase tracking-wider text-white rounded transition duration-300 transform hover:scale-105 active:scale-95 shadow-xl view-location-jiggle"
-                    style="background-color: var(--color-gold);">
-                    View Location
+                
+                <!-- NEW STRUCTURE: Button | QR (Inline) -->
+                <div class="mt-8 flex items-center justify-center space-x-4">
+                    <!-- 1. View Location Button (Directly opens map) -->
+                    <button id="view-location-button" 
+                        class="px-6 py-3 text-lg font-bold uppercase tracking-wider text-white rounded transition duration-300 transform hover:scale-105 active:scale-95 shadow-xl view-location-jiggle"
+                        style="background-color: var(--color-gold);">
+                        View Location
+                    </button>
+
+                    <!-- Separator -->
+                    <div class="text-2xl font-light text-gray-500 hidden sm:block">|</div>
+
+                    <!-- 2. Clickable QR Code Image -->
+                    <a href="https://maps.app.goo.gl/1bNyPBiMZW7SSm377" target="_blank" title="Scan or Click for Map" class="hidden sm:block">
+                        <!-- Increased size to w-24 h-24 (96px) for easier scanning -->
+                        <div class="w-24 h-24 bg-white border-2 p-1 shadow-md transition duration-300 hover:scale-105" style="border-color: var(--color-gold);">
+                            <!-- Updated image source size for quality -->
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://maps.app.goo.gl/1bNyPBiMZW7SSm377" alt="Location QR Code" class="w-full h-full object-cover">
+                        </div>
+                    </a>
+                </div>
+                <!-- END NEW STRUCTURE -->
+
+                <!-- Button to initiate the loop back -->
+                <button onclick="resetScroll()" class="mt-16 text-lg underline hover:opacity-80 transition" style="color: var(--color-gold);">
+                    Reread the Story
                 </button>
             </div>
         </section>
-
-        <!-- Scene 4: Location QR Code & RSVP -->
-        <section id="scene-4">
-            <div class="flourish"></div>
-            <h2 class="title mb-6 uppercase tracking-widest" style="color: var(--color-gold);">
-                Location & RSVP
-            </h2>
-            <!-- Uses flex-col (vertical) on mobile and md:flex-row (horizontal) on desktop -->
-            <div class="flex flex-col md:flex-row items-center gap-8">
-                <div class="text-center">
-                    <p class="text-xl mb-4">Directions to the Venue:</p>
-                    <div class="w-40 h-40 bg-white border-4 p-2 shadow-xl mx-auto" style="border-color: var(--color-gold);">
-                        <!-- QR Code generated from the actual Google Maps link -->
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://maps.app.goo.gl/1bNyPBiMZW7SSm377" alt="Location QR Code" class="w-full h-full object-cover">
-                    </div>
-                </div>
-                
-                <div class="h-40 w-px bg-gray-300 hidden md:block"></div>
-
-                <div class="text-center">
-                    <p class="text-xl mb-4">Please Confirm Your Attendance:</p>
-                    <button id="rsvp-button" class="px-8 py-3 uppercase tracking-wider text-white font-bold transition duration-300 shadow-lg"
-                        style="background-color: var(--color-gold);">
-                        RSVP Now
-                    </button>
-                    <p class="text-sm mt-3 text-gray-500">Kindly RSVP by November 30th.</p>
-                </div>
-            </div>
-
-            <!-- Button to initiate the loop back -->
-            <button onclick="resetScroll()" class="mt-16 text-lg underline hover:opacity-80 transition" style="color: var(--color-gold);">
-                Reread the Story
-            </button>
-        </section>
-
-        <!-- Scene 5: Hidden scene to trigger the loop if scrolling continues -->
-        <section id="scene-5" style="height: 1px; visibility: hidden;"></section>
 
     </div>
 
     <script>
         const container = document.getElementById('main-scroll');
         const sections = Array.from(document.querySelectorAll('section'));
-        const SCENE_COUNT = sections.length;
+        const SCENE_COUNT = sections.length; // Now 4 (0, 1, 2, 3)
         let currentSceneIndex = 0;
         let isScrolling = false; // Flag to prevent rapid movements
 
@@ -283,11 +263,11 @@
         function navigateToScene(newIndex) {
             if (isScrolling) return;
 
-            // Ensure index is within bounds (excluding the hidden scene-5)
+            // Ensure index is within bounds (last index is SCENE_COUNT - 1, which is 3)
             if (newIndex < 0) {
                 newIndex = 0;
-            } else if (newIndex >= SCENE_COUNT - 1) {
-                // If past the last content scene (scene-4), loop back to the top
+            } else if (newIndex >= SCENE_COUNT) {
+                // If past the last content scene (scene-3), loop back to the top
                 setTimeout(resetScroll, 500); 
                 return;
             }
@@ -361,19 +341,7 @@
         // Note: Using { passive: false } to allow preventDefault()
         container.addEventListener('wheel', handleWheel, { passive: false });
 
-        // 3. Add simple click handler for the RSVP button (placeholder)
-        document.getElementById('rsvp-button').addEventListener('click', () => {
-            // Placeholder: Replace with custom modal/redirect logic in a real application.
-            console.log('RSVP Button Clicked: You would redirect to an RSVP form here.');
-            
-            const rsvpButton = document.getElementById('rsvp-button');
-            rsvpButton.textContent = 'Redirecting...';
-            setTimeout(() => {
-                rsvpButton.textContent = 'RSVP Now';
-            }, 1500);
-        });
-        
-        // 4. Add simple click handler for the View Location button
+        // 3. Click handler for the View Location button (Directly opens map)
         document.getElementById('view-location-button').addEventListener('click', () => {
             const mapUrl = "https://maps.app.goo.gl/1bNyPBiMZW7SSm377";
             window.open(mapUrl, '_blank');
