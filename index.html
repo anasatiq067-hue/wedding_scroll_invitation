@@ -22,13 +22,23 @@
         }
         .cursive { font-family: 'Great Vibes', cursive; }
 
-        /* The main scroll container now has native scrolling disabled */
+        /* The main scroll container is now the fixed viewport, hiding overflow */
         .scroll-container {
             height: 100vh;
-            overflow-y: hidden; /* Controls scrolling via JS now */
+            width: 100vw;
+            overflow: hidden; 
+            position: relative;
         }
 
-        /* Each scene is still full height */
+        /* This wrapper contains all scenes and is transformed vertically to slide them */
+        #scene-wrapper {
+            position: absolute;
+            width: 100%;
+            /* Apply smooth transition to the transform property for sliding effect */
+            transition: transform 0.8s ease-out;
+        }
+
+        /* Each scene is full height and width, stacked vertically inside the wrapper */
         section {
             height: 100vh;
             display: flex;
@@ -40,19 +50,11 @@
             box-sizing: border-box;
             background-color: var(--color-cream);
             position: relative;
-            /* Animation state properties */
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 1s ease-out, transform 1s ease-out;
+            /* Remove opacity/transform animation from individual sections */
+            transition: none; 
         }
 
-        /* State when the scene is active/visible */
-        .visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Subtle background flourish */
+        /* Subtle background flourish - MOVED OUTSIDE THE SECTIONS TO BE A FIXED OVERLAY */
         .flourish {
             position: absolute;
             width: 80%;
@@ -61,20 +63,10 @@
             top: 10%;
             left: 10%;
             pointer-events: none;
+            /* Ensure it is above the content (optional, but good practice) */
+            z-index: 10; 
         }
 
-        /* --- SCROLL PROMPT ANIMATION --- */
-        @keyframes scroll-prompt {
-            0% { transform: translateY(0); opacity: 1; }
-            50% { transform: translateY(25px); opacity: 0.5; } /* Moves the indicator down 25px */
-            100% { transform: translateY(0); opacity: 1; }
-        }
-        
-        .scroll-indicator {
-            /* Apply the new, clearer animation */
-            animation: scroll-prompt 2s infinite ease-in-out;
-        }
-        
         /* --- VIEW LOCATION JIGGLE ANIMATION --- */
         @keyframes button-jiggle {
             0%, 100% { transform: scale(1); }
@@ -92,114 +84,125 @@
 
     <div class="scroll-container" id="main-scroll">
         
-        <!-- Scene 0: Blessings (Initial View) -->
-        <section id="scene-0">
-            <div class="flourish"></div>
-            <!-- Arabic text: Decreased base size to 3xl, ensuring it fits on smallest mobile screens -->
-            <p class="text-xl italic mb-4">Seeking Blessings from Allah, the Most High,</p>
-            <h1 class="text-3xl sm:text-5xl md:text-7xl font-bold text-center" style="color: var(--color-gold);">
-                بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ
-            </h1>
-            <!-- Subtitle text: Explicitly set responsive sizes -->
-            <p class="text-base sm:text-lg md:text-xl mt-6 max-w-lg text-center">
-                The Family members of M. Atiq (late) and Khushnudi Begum (Late) inviting you to the
-            </p>
-            <div class="mt-20 flex flex-col items-center scroll-indicator">
-                <span class="text-3xl" style="color: var(--color-gold);">↓</span>
-                <span class="text-sm uppercase tracking-widest mt-1">Scroll Down</span>
-            </div>
-        </section>
-
-        <!-- Scene 1: The Couple (Bride and Groom Names) -->
-        <section id="scene-1">
-            <div class="flourish"></div>
-            <h2 class="text-4xl sm:text-5xl md:text-6xl uppercase tracking-widest mb-10">
-                Wedding Ceremony of
-            </h2>
-            <!-- Name 1: Decreased base size to 4xl for mobile -->
-            <p class="cursive text-4xl sm:text-5xl md:text-8xl" style="color: var(--color-gold);">
-                Daughter Of athar atiq
-            </p>
-            <p class="text-2xl mt-4 mb-4 text-gray-500">&</p>
-            <!-- Name 2: Decreased base size to 4xl for mobile -->
-            <p class="cursive text-4xl sm:text-5xl md:text-8xl" style="color: var(--color-gold);">
-                Shahab Ullah Kirmani
-            </p>
-            <p class="text-lg mt-10">Daughter of Athar Atiq & Son of Haseeb Ullah Kirmani</p>
-        </section>
-
-        <!-- Scene 2: Date and Time -->
-        <section id="scene-2">
-            <div class="flourish"></div>
-            <!-- Heading: Explicitly set responsive sizes -->
-            <h2 class="text-4xl md:text-6xl mb-8 uppercase tracking-widest" style="color: var(--color-gold);">
-                INSHALLAH on
-            </h2>
-            <div class="text-center">
-                <p class="text-5xl md:text-7xl font-bold">JANUARY 09</p>
-                <p class="text-2xl md:text-3xl mt-4">2026</p>
-                <div class="h-px w-20 mx-auto bg-gray-400 my-6"></div>
-                <p class="text-xl md:text-3xl">Starting: 9:00 PM</p>
-                <p class="text-lg text-gray-500 mt-2"></p>
-                
-                <!-- UPDATED: Add to Calendar Button - Now matches the gold color, text size, and shadow of the View Location button -->
-                <button onclick="createCalendarLink()" 
-                    class="mt-8 px-6 py-3 text-lg font-bold uppercase tracking-wider text-white rounded transition duration-300 transform hover:scale-105 active:scale-95 shadow-xl"
-                    style="background-color: var(--color-gold);">
-                    Add to Calendar
-                </button>
-                <!-- END UPDATED -->
-            </div>
-        </section>
-
-        <!-- Scene 3: Venue and Location (Final Page) -->
-        <section id="scene-3">
-            <div class="flourish"></div>
-            <h2 class="text-4xl md:text-5xl mb-8 uppercase tracking-widest" style="color: var(--color-gold);">
-                The Venue
-            </h2>
-            <div class="text-center">
-                <!-- Venue Name: Explicitly set responsive sizes -->
-                <p class="text-4xl sm:text-5xl md:text-7xl font-semibold">Crown Banquet</p>
-                <!-- Address: Kept large for emphasis -->
-                <p class="text-xl md:text-3xl mt-4 max-w-xl font-medium">
-                    Block 'N' North Nazimabad, Karachi
+        <!-- FIXED FLOURISH FRAME: This element now stays completely still -->
+        <div class="flourish"></div>
+        
+        <!-- Scene Wrapper for Vertical Translation (This moves) -->
+        <div id="scene-wrapper">
+            
+            <!-- Scene 0: Blessings (Initial View) -->
+            <section id="scene-0">
+                <!-- Removed flourish from here -->
+                <!-- Arabic text: Decreased base size to 3xl, ensuring it fits on smallest mobile screens -->
+                <p class="text-xl italic mb-4">Seeking Blessings from Allah, the Most High,</p>
+                <h1 class="text-3xl sm:text-5xl md:text-7xl font-bold text-center" style="color: var(--color-gold);">
+                    بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ
+                </h1>
+                <!-- Subtitle text: Explicitly set responsive sizes -->
+                <p class="text-base sm:text-lg md:text-xl mt-6 max-w-lg text-center">
+                    The Family members of M. Atiq (late) and Khushnudi Begum (Late) inviting you to the
                 </p>
-                
-                <!-- EXISTING STRUCTURE: Button | QR (Inline) -->
-                <div class="mt-8 flex items-center justify-center space-x-4">
-                    <!-- 1. View Location Button (Directly opens map) -->
-                    <button id="view-location-button" 
-                        class="px-6 py-3 text-lg font-bold uppercase tracking-wider text-white rounded transition duration-300 transform hover:scale-105 active:scale-95 shadow-xl view-location-jiggle"
-                        style="background-color: var(--color-gold);">
-                        View Location
-                    </button>
-
-                    <!-- Separator -->
-                    <div class="text-2xl font-light text-gray-500 hidden sm:block">|</div>
-
-                    <!-- 2. Clickable QR Code Image -->
-                    <a href="https://maps.app.goo.gl/1bNyPBiMZW7SSm377" target="_blank" title="Scan or Click for Map" class="hidden sm:block">
-                        <!-- Increased size to w-24 h-24 (96px) for easier scanning -->
-                        <div class="w-24 h-24 bg-white border-2 p-1 shadow-md transition duration-300 hover:scale-105" style="border-color: var(--color-gold);">
-                            <!-- Updated image source size for quality -->
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://maps.app.goo.gl/1bNyPBiMZW7SSm377" alt="Location QR Code" class="w-full h-full object-cover">
-                        </div>
-                    </a>
+                <!-- Removed old scroll indicator as it no longer reflects the interaction -->
+                <div class="mt-20 flex flex-col items-center">
+                    <span class="text-3xl" style="color: var(--color-gold);">↓</span>
+                    <span class="text-sm uppercase tracking-widest mt-1">Swipe or Scroll</span>
                 </div>
-                <!-- END EXISTING STRUCTURE -->
+            </section>
 
-                <!-- Button to initiate the loop back -->
-                <button onclick="resetScroll()" class="mt-16 text-lg underline hover:opacity-80 transition" style="color: var(--color-gold);">
-                    Reread the Story
-                </button>
-            </div>
-        </section>
+            <!-- Scene 1: The Couple (Bride and Groom Names) -->
+            <section id="scene-1">
+                <!-- Removed flourish from here -->
+                <h2 class="text-4xl sm:text-5xl md:text-6xl uppercase tracking-widest mb-10">
+                    Wedding Ceremony of
+                </h2>
+                <!-- Name 1: Decreased base size to 4xl for mobile -->
+                <p class="cursive text-4xl sm:text-5xl md:text-8xl" style="color: var(--color-gold);">
+                    Daughter Of athar atiq
+                </p>
+                <p class="text-2xl mt-4 mb-4 text-gray-500">&</p>
+                <!-- Name 2: Decreased base size to 4xl for mobile -->
+                <p class="cursive text-4xl sm:text-5xl md:text-8xl" style="color: var(--color-gold);">
+                    Shahab Ullah Kirmani
+                </p>
+                <p class="text-lg mt-10">Daughter of Athar Atiq & Son of Haseeb Ullah Kirmani</p>
+            </section>
+
+            <!-- Scene 2: Date and Time -->
+            <section id="scene-2">
+                <!-- Removed flourish from here -->
+                <!-- Heading: Explicitly set responsive sizes -->
+                <h2 class="text-4xl md:text-6xl mb-8 uppercase tracking-widest" style="color: var(--color-gold);">
+                    INSHALLAH on
+                </h2>
+                <div class="text-center">
+                    <p class="text-5xl md:text-7xl font-bold">JANUARY 09</p>
+                    <p class="text-2xl md:text-3xl mt-4">2026</p>
+                    <div class="h-px w-20 mx-auto bg-gray-400 my-6"></div>
+                    <p class="text-xl md:text-3xl">Starting: 9:00 PM</p>
+                    <p class="text-lg text-gray-500 mt-2"></p>
+                    
+                    <!-- UPDATED: Add to Calendar Button -->
+                    <button onclick="createCalendarLink()" 
+                        class="mt-8 px-6 py-3 text-lg font-bold uppercase tracking-wider text-white rounded transition duration-300 transform hover:scale-105 active:scale-95 shadow-xl"
+                        style="background-color: var(--color-gold);">
+                        Add to Calendar
+                    </button>
+                    <!-- END UPDATED -->
+                </div>
+            </section>
+
+            <!-- Scene 3: Venue and Location (Final Page) -->
+            <section id="scene-3">
+                <!-- Removed flourish from here -->
+                <h2 class="text-4xl md:text-5xl mb-8 uppercase tracking-widest" style="color: var(--color-gold);">
+                    The Venue
+                </h2>
+                <div class="text-center">
+                    <!-- Venue Name: Explicitly set responsive sizes -->
+                    <p class="text-4xl sm:text-5xl md:text-7xl font-semibold">Crown Banquet</p>
+                    <!-- Address: Kept large for emphasis -->
+                    <p class="text-xl md:text-3xl mt-4 max-w-xl font-medium">
+                        Block 'N' North Nazimabad, Karachi
+                    </p>
+                    
+                    <!-- EXISTING STRUCTURE: Button | QR (Inline) -->
+                    <div class="mt-8 flex items-center justify-center space-x-4">
+                        <!-- 1. View Location Button (Directly opens map) -->
+                        <button id="view-location-button" 
+                            class="px-6 py-3 text-lg font-bold uppercase tracking-wider text-white rounded transition duration-300 transform hover:scale-105 active:scale-95 shadow-xl view-location-jiggle"
+                            style="background-color: var(--color-gold);">
+                            View Location
+                        </button>
+
+                        <!-- Separator -->
+                        <div class="text-2xl font-light text-gray-500 hidden sm:block">|</div>
+
+                        <!-- 2. Clickable QR Code Image -->
+                        <a href="https://maps.app.goo.gl/1bNyPBiMZW7SSm377" target="_blank" title="Scan or Click for Map" class="hidden sm:block">
+                            <!-- Increased size to w-24 h-24 (96px) for easier scanning -->
+                            <div class="w-24 h-24 bg-white border-2 p-1 shadow-md transition duration-300 hover:scale-105" style="border-color: var(--color-gold);">
+                                <!-- Updated image source size for quality -->
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://maps.app.goo.gl/1bNyPBiMZW7SSm377" alt="Location QR Code" class="w-full h-full object-cover">
+                            </div>
+                        </a>
+                    </div>
+                    <!-- END EXISTING STRUCTURE -->
+
+                    <!-- Button to initiate the loop back -->
+                    <button onclick="resetScroll()" class="mt-16 text-lg underline hover:opacity-80 transition" style="color: var(--color-gold);">
+                        Reread the Story
+                    </button>
+                </div>
+            </section>
+        </div>
+        <!-- END Scene Wrapper -->
 
     </div>
 
     <script>
+        // Select the wrapper instead of the scroll-container for transformations
         const container = document.getElementById('main-scroll');
+        const sceneWrapper = document.getElementById('scene-wrapper');
         const sections = Array.from(document.querySelectorAll('section'));
         const SCENE_COUNT = sections.length; // Now 4 (0, 1, 2, 3)
         let currentSceneIndex = 0;
@@ -232,31 +235,14 @@
         };
 
         /**
-         * Helper to update the visible class based on the current index
-         */
-        function updateVisibilityClasses(index) {
-            sections.forEach((section, i) => {
-                if (i === index) {
-                    section.classList.add('visible');
-                } else {
-                    section.classList.remove('visible');
-                }
-            });
-        }
-        
-        /**
-         * Manually scrolls back to the first scene (Blessings).
+         * Manually resets the view back to the first scene.
          */
         function resetScroll() {
             // Reset index to 0
             currentSceneIndex = 0;
             
-            container.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-            
-            updateVisibilityClasses(0);
+            // Transform wrapper back to the start (0vh)
+            sceneWrapper.style.transform = 'translateY(0vh)';
             
             // Allow scrolling again after reset transition
             setTimeout(() => {
@@ -265,8 +251,7 @@
         }
 
         /**
-         * Controlled function to move to a new scene index.
-         * Ensures movement is restricted to one scene at a time.
+         * Controlled function to move to a new scene index by transforming the wrapper.
          */
         function navigateToScene(newIndex) {
             if (isScrolling) return;
@@ -283,17 +268,12 @@
             isScrolling = true;
             currentSceneIndex = newIndex;
             
-            const targetScrollTop = currentSceneIndex * container.clientHeight;
+            // Calculate the translation distance (e.g., -0vh, -100vh, -200vh, -300vh)
+            const transformValue = `translateY(-${currentSceneIndex * 100}vh)`;
 
-            container.scrollTo({
-                top: targetScrollTop,
-                behavior: 'smooth'
-            });
-            
-            // Update visibility class immediately for the target scene
-            updateVisibilityClasses(currentSceneIndex);
+            sceneWrapper.style.transform = transformValue;
 
-            // Re-enable scrolling after the transition is visually complete (must match smooth transition time)
+            // Re-enable scrolling after the transition is visually complete
             setTimeout(() => {
                 isScrolling = false;
             }, 800); 
@@ -301,8 +281,6 @@
 
         /**
          * Generates and opens a Google Calendar link based on event details.
-         * Note: Setting the reminder time and specific color is often ignored 
-         * by the basic template link but the core event data is saved.
          */
         function createCalendarLink() {
             const title = encodeURIComponent("Wedding Ceremony");
@@ -334,37 +312,41 @@
         let touchEndY = 0;
 
         container.addEventListener('touchstart', (e) => {
-            touchStartY = e.changedTouches[0].screenY;
-            touchEndY = touchStartY; 
-        }, { passive: false }); // Use { passive: false } to enable e.preventDefault() in touchmove
+            // Use e.touches[0] for current touch point
+            touchStartY = e.touches[0].screenY;
+        }, { passive: true }); 
 
         container.addEventListener('touchmove', (e) => {
-            // Prevent default scrolling behavior
-            e.preventDefault(); 
-            touchEndY = e.changedTouches[0].screenY;
-        }, { passive: false });
+            // Update touchEndY but do not prevent default here, let it run
+            touchEndY = e.touches[0].screenY;
+        }, { passive: true });
 
         container.addEventListener('touchend', () => {
             const swipeDistance = touchStartY - touchEndY;
             const swipeThreshold = 50; // Minimum vertical swipe distance to register
 
             if (Math.abs(swipeDistance) > swipeThreshold) {
-                const direction = swipeDistance > 0 ? 1 : -1; // 1 for down, -1 for up
+                // If swiped down (swipeDistance is negative, e.g., -100), direction is -1 (up one scene)
+                // If swiped up (swipeDistance is positive, e.g., 100), direction is 1 (down one scene)
+                const direction = swipeDistance > 0 ? 1 : -1;
                 navigateToScene(currentSceneIndex + direction);
             }
+            // Reset touch points
+            touchStartY = 0;
+            touchEndY = 0;
         });
 
 
         // --- Initialization ---
 
-        // 1. Initial setup: Check which scene is visible on load and mark it
+        // 1. Initial setup: Set the initial transform state on load
         window.onload = () => {
-             // Ensure the initial state is correct (Scene 0 visible)
-            updateVisibilityClasses(currentSceneIndex);
+             // Ensure wrapper starts at the top
+             sceneWrapper.style.transform = 'translateY(0vh)';
         };
 
         // 2. Add wheel listener for desktop scrolling (controlled navigation)
-        // Note: Using { passive: false } to allow preventDefault()
+        // Passive false is required to prevent the default page scroll
         container.addEventListener('wheel', handleWheel, { passive: false });
 
         // 3. Click handler for the View Location button (Directly opens map)
